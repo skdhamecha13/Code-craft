@@ -1,13 +1,66 @@
-# Graph Depth-First Search (DFS) Implementation
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-## Overview
+public class ThreeSum {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        
+        // Sort the array to allow using the two-pointer technique
+        Arrays.sort(nums);
+        
+        // Iterate over the array
+        for (int i = 0; i < nums.length - 2; i++) {
+            // Skip duplicate elements for the first element
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            
+            int left = i + 1;  // Start pointer after the current element
+            int right = nums.length - 1;  // End pointer at the end of the array
+            
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                
+                if (sum == 0) {
+                    // Found a valid triplet
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    
+                    // Move left pointer forward and right pointer backward
+                    left++;
+                    right--;
+                    
+                    // Skip duplicate elements for the second and third elements
+                    while (left < right && nums[left] == nums[left - 1]) {
+                        left++;
+                    }
+                    while (left < right && nums[right] == nums[right + 1]) {
+                        right--;
+                    }
+                } else if (sum < 0) {
+                    // Sum is too small, move the left pointer to increase the sum
+                    left++;
+                } else {
+                    // Sum is too large, move the right pointer to decrease the sum
+                    right--;
+                }
+            }
+        }
+        
+        return result;
+    }
 
-This project implements a simple **Depth-First Search (DFS)** algorithm to traverse a graph starting from a given vertex. The graph is represented as an adjacency list using Java's built-in data structures.
-
-DFS is a recursive algorithm that visits all vertices in a graph by starting at the given node and exploring as far as possible along each branch before backtracking.
-
-## Features
-
-- **Graph Representation**: The graph is represented using an adjacency list.
-- **Graph Traversal**: The DFS algorithm traverses the graph starting from a specified vertex and visits each connected vertex exactly once.
-- **Edge Addition**: The graph is undirected, meaning if there is an edge between two vertices, you can traverse in both directions.
+    public static void main(String[] args) {
+        ThreeSum solver = new ThreeSum();
+        
+        int[] nums = {-1, 0, 1, 2, -1, -4};
+        
+        List<List<Integer>> triplets = solver.threeSum(nums);
+        
+        // Print the result
+        System.out.println("Unique triplets that sum to zero:");
+        for (List<Integer> triplet : triplets) {
+            System.out.println(triplet);
+        }
+    }
+}
